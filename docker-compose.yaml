@@ -1,0 +1,30 @@
+services:
+  server:
+    image: fivem-server:latest
+    links:
+      - db
+    depends_on:
+      - db
+    ports:
+      - "30120:30120/udp"
+      - "30120:30120/tcp"
+      - "40120:40120/tcp"
+    restart: unless-stopped
+    volumes:
+      - fivem-data:/serverdata/txData
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: <PASSWORD>
+    volumes:
+      - fivem-db:/var/lib/mysql
+  adminer:
+    image: adminer
+    links:
+      - db
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      ADMINER_DESIGN: pepa-linha-dark
